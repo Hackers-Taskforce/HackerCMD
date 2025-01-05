@@ -2,7 +2,7 @@
 
 HackerCMD is a multi-functional command-line tool designed for ethical hackers, penetration testers, and cybersecurity enthusiasts. It supports a variety of features like network scanning, vulnerability scanning, DNS lookups, SSL certificate retrieval, banner grabbing, brute-forcing subdomains, password strength checking, and more.
 --
-##(Creator Note:)
+# (Creator Note:)
 If you fine and issue with the code feel free to reach out via discord or with the org on GitHub..
 --
 ## Features
