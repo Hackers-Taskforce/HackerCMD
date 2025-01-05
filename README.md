@@ -260,6 +260,16 @@ python hackercmd.py [command] [options]
       python hackercmd.py -h
       ```
 
+21. **base54** Encode and Decode
+    - **Encode Usage**
+      ```bash
+      python hackercmd.py encode "hello world"
+      ```
+      - **Decode Usage**
+        ```bash
+        python hackercmd.py decode aGVsbG8gd29ybGQ=
+        ```
+
 ## Requirements
 
 - Python 3.x
