@@ -1,4 +1,4 @@
-﻿import argparse
+import argparse
 import hashlib
 import socket
 import subprocess
@@ -14,6 +14,7 @@ import ftplib
 import smtplib
 import re
 from colorama import Fore, Back, Style, init
+import base64
 
 # Initialize colorama
 init(autoreset=True)
@@ -30,7 +31,7 @@ def display_banner():
 ╚═╝     ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝
 
 {Fore.CYAN}Created by: {Fore.YELLOW}ChickenWithACrown (Hackers Taskforce)
-{Fore.CYAN}Version: {Fore.YELLOW}7.3.77
+{Fore.CYAN}Version: {Fore.YELLOW}7.5.98
 {Fore.GREEN + Style.BRIGHT}---------------------------------------------
 
 """
@@ -49,11 +50,17 @@ def scan_ip(ip, ports):
         else:
             print(f"Port {port} is closed")
 
-
 def generate_hash(data, algorithm):
     hash_obj = hashlib.new(algorithm, data.encode())
     return hash_obj.hexdigest()
 
+def crack_hash(hash_to_crack, wordlist):
+    for word in wordlist:
+        if generate_hash(word, 'sha256') == hash_to_crack:
+            print(f"Found match! The original value is: {word}")
+            return word
+    print("No match found.")
+    return None
 
 def password_strength(password):
     score = 0
@@ -69,11 +76,9 @@ def password_strength(password):
         score += 1
     return score
 
-
 def dns_lookup(domain):
     result = dns.resolver.resolve(domain, 'A')
     return [ip.address for ip in result]
-
 
 def reverse_dns(ip):
     try:
@@ -82,36 +87,29 @@ def reverse_dns(ip):
     except socket.herror:
         return "No PTR record found"
 
-
 def ping_ip(ip):
     response = subprocess.run(['ping', ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return response.stdout.decode()
-
 
 def traceroute(target):
     response = subprocess.run(['traceroute', target], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return response.stdout.decode()
 
-
 def whois_lookup(target):
     result = whois.whois(target)
     return result
-
 
 def ip_geolocation(ip):
     response = requests.get(f'https://ipinfo.io/{ip}/json')
     return response.json()
 
-
 def network_info():
     response = subprocess.run(['ipconfig'], stdout=subprocess.PIPE)
     return response.stdout.decode()
 
-
 def get_http_headers(url):
     response = requests.head(url)
     return response.headers
-
 
 def ssl_certificate_info(domain):
     context = ssl.create_default_context()
@@ -120,12 +118,10 @@ def ssl_certificate_info(domain):
             cert = ssock.getpeercert()
             return cert
 
-
 def shodan_search(api_key, query):
     api = Shodan(api_key)
     results = api.search(query)
     return results
-
 
 def dns_brute_force(domain, wordlist):
     subdomains = []
@@ -137,12 +133,10 @@ def dns_brute_force(domain, wordlist):
             continue
     return subdomains
 
-
 def nmap_scan(target):
     nm = nmap.PortScanner()
     nm.scan(target, '1-1024')  # Scan ports 1 to 1024
     return nm[target].all_tcp()
-
 
 def ftp_banner_grab(ip):
     try:
@@ -155,7 +149,6 @@ def ftp_banner_grab(ip):
     except Exception as e:
         return str(e)
 
-
 def smtp_banner_grab(ip):
     try:
         smtp = smtplib.SMTP(ip)
@@ -165,13 +158,11 @@ def smtp_banner_grab(ip):
     except Exception as e:
         return str(e)
 
-
 def xss_vulnerability_scan(url):
     response = requests.get(url)
     xss_pattern = r"<script.*?>.*?</script.*?>"
     matches = re.findall(xss_pattern, response.text, re.IGNORECASE)
     return matches
-
 
 def sql_injection_scan(url):
     payloads = ["' OR 1=1 --", '" OR 1=1 --', "'; DROP TABLE users --"]
@@ -183,6 +174,14 @@ def sql_injection_scan(url):
             vulnerable.append(test_url)
     return vulnerable
 
+# Base64 Encode and Decode Functions
+def encode_base64(data):
+    encoded_data = base64.b64encode(data.encode('utf-8')).decode('utf-8')
+    return encoded_data
+
+def decode_base64(encoded_data):
+    decoded_data = base64.b64decode(encoded_data).decode('utf-8')
+    return decoded_data
 
 # Argument Parsing Setup
 def main():
@@ -202,6 +201,11 @@ def main():
     hash_parser = subparsers.add_parser("hash", help="Generate a hash")
     hash_parser.add_argument("data", help="Data to hash")
     hash_parser.add_argument("--algorithm", choices=hashlib.algorithms_available, default="sha256", help="Hashing algorithm")
+
+    # Hash Cracking
+    hash_crack_parser = subparsers.add_parser("crack", help="Attempt to crack a SHA256 hash")
+    hash_crack_parser.add_argument("hash_to_crack", help="The SHA256 hash to crack")
+    hash_crack_parser.add_argument("wordlist", help="Path to wordlist file for brute-forcing")
 
     # Password Strength
     password_parser = subparsers.add_parser("password", help="Check password strength")
@@ -266,11 +270,16 @@ def main():
 
     # XSS Vulnerability Scan
     xss_parser = subparsers.add_parser("xss_scan", help="Scan a website for XSS vulnerabilities")
-    xss_parser.add_argument("url", help="URL to scan for XSS")
+    xss_parser.add_argument("url", help="URL to scan for XSS vulnerabilities")
 
     # SQL Injection Scan
     sql_parser = subparsers.add_parser("sql_scan", help="Scan a website for SQL Injection vulnerabilities")
-    sql_parser.add_argument("url", help="URL to scan for SQL Injection")
+    sql_parser.add_argument("url", help="URL to scan for SQL injection")
+
+    # Base64 Encoding/Decoding
+    base64_parser = subparsers.add_parser("base64", help="Base64 encode or decode data")
+    base64_parser.add_argument("action", choices=["encode", "decode"], help="Action to perform")
+    base64_parser.add_argument("data", help="Data to encode or decode")
 
     args = parser.parse_args()
 
@@ -279,12 +288,17 @@ def main():
             scan_ip(args.ip, args.ports)
         elif args.command == "hash":
             print(f"Hash ({args.algorithm}): {generate_hash(args.data, args.algorithm)}")
+        elif args.command == "crack":
+            with open(args.wordlist, 'r') as f:
+                wordlist = f.read().splitlines()
+            crack_hash(args.hash_to_crack, wordlist)
         elif args.command == "password":
             print(f"Password Strength: {password_strength(args.password)}/5")
         elif args.command == "dns":
-            print(f"DNS Records: {dns_lookup(args.domain)}")
+            dns_records = dns_lookup(args.domain)
+            print(f"DNS Records for {args.domain}: {dns_records}")
         elif args.command == "reverse":
-            print(reverse_dns(args.ip))
+            print(f"Reverse DNS for {args.ip}: {reverse_dns(args.ip)}")
         elif args.command == "ping":
             print(ping_ip(args.ip))
         elif args.command == "traceroute":
@@ -304,7 +318,8 @@ def main():
         elif args.command == "dns_brute":
             with open(args.wordlist, 'r') as f:
                 wordlist = f.read().splitlines()
-            print(dns_brute_force(args.domain, wordlist))
+            subdomains = dns_brute_force(args.domain, wordlist)
+            print(f"Found subdomains: {subdomains}")
         elif args.command == "nmap":
             print(nmap_scan(args.target))
         elif args.command == "ftp_banner":
@@ -315,9 +330,13 @@ def main():
             print(xss_vulnerability_scan(args.url))
         elif args.command == "sql_scan":
             print(sql_injection_scan(args.url))
-
+        elif args.command == "base64":
+            if args.action == "encode":
+                print(f"Base64 Encoded: {encode_base64(args.data)}")
+            elif args.action == "decode":
+                print(f"Base64 Decoded: {decode_base64(args.data)}")
     except Exception as e:
-        print(f"{Fore.RED}Error: {e}")
+        print(f"Error: {e}")
         
 
 if __name__ == "__main__":
