@@ -254,6 +254,11 @@ python hackercmd.py [command] [options]
       ```bash
       python hackercmd.py sql_scan http://example.com
       ```
+20. **-h** Shows a list of the commands to use.
+    - **Usage**
+      ```bash
+      python hackercmd.py -h
+      ```
 
 ## Requirements
 
