@@ -1,0 +1,12 @@
+{
+  "projectName": "HackerCMD",
+  "projectOwner": "ChickenWithACrown",
+  "repoType": "github",
+  "files": ["README.md"],
+  "imageSize": 100,
+  "commit": false,
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": false,
+  "badgeTemplate": "[![All Contributors](https://img.shields.io/github/all-contributors/<%= projectOwner %>/<%= projectName %>?color=ee8449&style=flat-square)](#contributors)",
+  "contributors": []
+}
