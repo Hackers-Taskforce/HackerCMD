@@ -1,7 +1,6 @@
 requests
 python-nmap
 shodan
-smtplib
 python-whois
 dnsresolver
 ipwhois
