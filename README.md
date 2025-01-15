@@ -5,6 +5,15 @@ HackerCMD is a multi-functional command-line tool designed for ethical hackers, 
 ## (Creator Note:)
 If you find an issue with the code feel free to reach out via Discord or with the org on GitHub..
 --
+## Contributors ✨
+
+Thanks to these amazing people:
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+<!-- prettier-ignore-end -->
+--
 ## Features
 
 - IP scanning
