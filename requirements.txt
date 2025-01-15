@@ -2,6 +2,6 @@ requests
 python-nmap
 shodan
 python-whois
-dnsresolver
 ipwhois
 colorama
+dnspython
