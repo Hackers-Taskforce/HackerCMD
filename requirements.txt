@@ -1,7 +1,6 @@
 requests
 python-nmap
 shodan
-ftplib
 smtplib
 python-whois
 dnsresolver
