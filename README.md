@@ -1,5 +1,10 @@
 # HackerCMD - Multi-purpose Command-Line Tool
+
+[![Build Status](https://github.com/Hackers-Taskforce/HackerCMD/actions/workflows/python-publish.yml/badge.svg?branch=main)](https://github.com/Hackers-Taskforce/HackerCMD/actions)
+[![PyPI Version](https://img.shields.io/pypi/v/HackerCMD)](https://pypi.org/project/HackerCMD/)
+[![MIT License](https://img.shields.io/github/license/Hackers-Taskforce/HackerCMD)](https://github.com/Hackers-Taskforce/HackerCMD/blob/main/LICENSE)
 [![Dependencies](https://img.shields.io/librariesio/github/Hackers-Taskforce/HackerCMD)](https://libraries.io/github/Hackers-Taskforce/HackerCMD)
+
 
 HackerCMD is a multi-functional command-line tool designed for ethical hackers, penetration testers, and cybersecurity enthusiasts. It supports a variety of features like network scanning, vulnerability scanning, DNS lookups, SSL certificate retrieval, banner grabbing, brute-forcing subdomains, password strength checking, and more.
 --
