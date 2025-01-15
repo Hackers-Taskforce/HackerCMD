@@ -1,5 +1,5 @@
 requests
-nmap
+python-nmap
 shodan
 ftplib
 smtplib
