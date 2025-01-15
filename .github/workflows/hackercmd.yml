@@ -1,0 +1,60 @@
+name: HackerCMD CI/CD
+
+# Trigger the workflow on push to the main branch and pull requests targeting it
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual triggering
+
+# Define the jobs that run for this workflow
+jobs:
+  build:
+    runs-on: ubuntu-latest # You can change this to macos-latest or windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4 # Checks out the code from the repository
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x' # Set the Python version you are using
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt # Install dependencies from the requirements.txt file
+
+      - name: Run Tests
+        run: |
+          pytest # Replace with your preferred testing framework if needed
+
+      - name: Build Project
+        run: |
+          echo "Building HackerCMD..." # Replace with actual build steps if necessary
+          # For example: python setup.py install
+
+      - name: Deploy to Staging (optional)
+        run: |
+          echo "Deploying to staging server..." # Replace with actual deployment steps
+        if: github.ref == 'refs/heads/main' # Only deploy on the main branch
+
+  # You can add additional jobs like linting, or jobs to run on other platforms:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run Linting
+        run: |
+          pip install flake8
+          flake8 . # Runs linting for Python code
