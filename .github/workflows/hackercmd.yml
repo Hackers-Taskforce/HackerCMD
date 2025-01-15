@@ -13,7 +13,8 @@ on:
 # Define the jobs that run for this workflow
 jobs:
   build:
-    runs-on: ubuntu-latest # You can change this to macos-latest or windows-latest
+    runs-on: ubuntu-22.04 # Updated to avoid the migration warning
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4 # Checks out the code from the repository
@@ -27,24 +28,28 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt # Install dependencies from the requirements.txt file
+        continue-on-error: false # Ensure that the job fails if this step fails
 
       - name: Run Tests
         run: |
-          pytest # Replace with your preferred testing framework if needed
+          pytest --maxfail=1 --disable-warnings -q # Modify the test command as per your project setup
+        continue-on-error: false # Ensure that the job fails if this step fails
 
       - name: Build Project
         run: |
           echo "Building HackerCMD..." # Replace with actual build steps if necessary
           # For example: python setup.py install
+        continue-on-error: false # Ensure that the job fails if this step fails
 
       - name: Deploy to Staging (optional)
         run: |
           echo "Deploying to staging server..." # Replace with actual deployment steps
         if: github.ref == 'refs/heads/main' # Only deploy on the main branch
 
-  # You can add additional jobs like linting, or jobs to run on other platforms:
+  # Linting Job
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # Updated to avoid the migration warning
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -54,7 +59,11 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
       - name: Run Linting
         run: |
           pip install flake8
           flake8 . # Runs linting for Python code
+        continue-on-error: false # Ensure that the job fails if this step fails
