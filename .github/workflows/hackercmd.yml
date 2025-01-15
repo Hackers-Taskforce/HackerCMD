@@ -1,6 +1,5 @@
 name: HackerCMD CI/CD
 
-# Trigger the workflow on push to the main branch and pull requests targeting it
 on:
   push:
     branches:
@@ -10,45 +9,44 @@ on:
       - main
   workflow_dispatch: # Allows manual triggering
 
-# Define the jobs that run for this workflow
 jobs:
   build:
-    runs-on: ubuntu-22.04 # Updated to avoid the migration warning
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4 # Checks out the code from the repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x' # Set the Python version you are using
+          python-version: '3.x'
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt # Install dependencies from the requirements.txt file
-        continue-on-error: false # Ensure that the job fails if this step fails
+
+      - name: Install Nmap
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nmap # Install Nmap tool on the runner
 
       - name: Run Tests
         run: |
-          pytest --maxfail=1 --disable-warnings -q # Modify the test command as per your project setup
-        continue-on-error: false # Ensure that the job fails if this step fails
+          pytest --maxfail=1 --disable-warnings -q
 
       - name: Build Project
         run: |
-          echo "Building HackerCMD..." # Replace with actual build steps if necessary
-          # For example: python setup.py install
-        continue-on-error: false # Ensure that the job fails if this step fails
+          echo "Building HackerCMD..."
 
       - name: Deploy to Staging (optional)
         run: |
-          echo "Deploying to staging server..." # Replace with actual deployment steps
-        if: github.ref == 'refs/heads/main' # Only deploy on the main branch
+          echo "Deploying to staging server..."
+        if: github.ref == 'refs/heads/main'
 
-  # Linting Job
   lint:
-    runs-on: ubuntu-22.04 # Updated to avoid the migration warning
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout Code
@@ -65,5 +63,4 @@ jobs:
       - name: Run Linting
         run: |
           pip install flake8
-          flake8 . # Runs linting for Python code
-        continue-on-error: false # Ensure that the job fails if this step fails
+          flake8 .
