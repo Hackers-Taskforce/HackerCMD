@@ -1,5 +1,5 @@
 # HackerCMD - Multi-purpose Command-Line Tool
-
+[![Dependencies](https://img.shields.io/librariesio/github/Hackers-Taskforce/HackerCMD)](https://libraries.io/github/Hackers-Taskforce/HackerCMD)
 
 HackerCMD is a multi-functional command-line tool designed for ethical hackers, penetration testers, and cybersecurity enthusiasts. It supports a variety of features like network scanning, vulnerability scanning, DNS lookups, SSL certificate retrieval, banner grabbing, brute-forcing subdomains, password strength checking, and more.
 --
